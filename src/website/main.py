@@ -19,7 +19,6 @@ st.title("📊 Automatic EDA Generator")
 uploaded_file = st.file_uploader("Upload your CSV dataset", type=["csv"])
 
 if uploaded_file:
-    # Step 1: Read raw bytes from uploaded file
     raw_data = uploaded_file.read()
 
     result = chardet.detect(raw_data)
@@ -28,11 +27,11 @@ if uploaded_file:
 
     st.info(f"Detected encoding: {detected_encoding} (confidence: {confidence:.2f})")
 
-    uploaded_file.seek(0)  # reset file pointer
+    uploaded_file.seek(0)  # Reset file pointer
     try:
         df = pd.read_csv(uploaded_file, encoding=detected_encoding)
-        df = df[0:200]
-        # added this segment because i worked on a csv with lots of columns that look irrelevant
+        # df = df[0:200]  # When I want it to run fast
+        # Added this segment because i worked on a csv with lots of columns that look irrelevant
         threshold = 0.9  # Remove columns with more than 90% zeros
         numeric_cols = df.select_dtypes(include='number')
         zero_fraction = (numeric_cols == 0).sum() / len(df)
